@@ -24,3 +24,11 @@ def login():
         return jsonify({"msg": "Invalid credentials"}), 401
     token = create_access_token(identity=str(user.id))
     return jsonify(access_token=token)
+
+@auth.route('/logout', methods=['POST'])
+def logout():
+    data = request.get_json()
+    user = User.objects(username=data['username']).first()
+    if not user or not check_password_hash(user.password, data['password']):    
+        return jsonify({"msg": "Invalid credentials"}), 401
+    return jsonify({"msg": "Logout successful"}), 200
