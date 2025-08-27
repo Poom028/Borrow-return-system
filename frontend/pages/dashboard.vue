@@ -254,6 +254,7 @@ const handleLogout = () => {
   }
 }
 
+
 const filteredNotes = computed(() =>
   notes.value.filter(
     (note) =>
