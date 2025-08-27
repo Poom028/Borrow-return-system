@@ -15,6 +15,14 @@ def get_equipment():
         for item in items
     ]), 200
 
+# ✅ Get equipment data for frontend (no auth required for public display)
+@equipment_bp.route("/equipment/public", methods=["GET"])
+def get_equipment_public():
+    items = Equipment.objects()
+    return jsonify([
+        {"name": item.name, "quantity": item.quantity}
+        for item in items
+    ]), 200
 
 # ✅ เพิ่มอุปกรณ์ใหม่
 @equipment_bp.route("/equipment/add", methods=["POST"])
@@ -34,7 +42,6 @@ def add_equipment():
     equipment.save()
 
     return jsonify({"msg": "เพิ่มอุปกรณ์สำเร็จ"}), 201
-
 
 # ✅ ยืมอุปกรณ์
 @equipment_bp.route("/equipment/borrow", methods=["POST"])
@@ -61,7 +68,6 @@ def borrow_equipment():
     borrow_record.save()
 
     return jsonify({"msg": "ยืมอุปกรณ์สำเร็จ"}), 200
-
 
 # ✅ คืนอุปกรณ์
 @equipment_bp.route("/equipment/return", methods=["POST"])

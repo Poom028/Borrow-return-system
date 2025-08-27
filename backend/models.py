@@ -1,6 +1,6 @@
 from mongoengine import (
     Document, StringField, ReferenceField,
-    DateTimeField, IntField
+    DateTimeField, IntField, StringField
 )
 from datetime import datetime
 
@@ -21,6 +21,7 @@ class Note(Document):
     content = StringField()
     created_at = DateTimeField(default=datetime.utcnow)
     user = ReferenceField(User, required=True)
+    status = StringField(default="Not Returned", choices=["Returned", "Not Returned"])  # สถานะการคืน
 
     meta = {"collection": "notes"}
 

@@ -1,117 +1,199 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-6">
-    <!-- หัวข้อ -->
-    <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">
-      ระบบยืม - คืนอุปกรณ์
-    </h1>
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <!-- Header Section -->
+    
 
-    <!-- เลือกอุปกรณ์ -->
-    <div class="bg-white shadow-lg rounded-lg p-4 mb-6">
-      <h2 class="text-lg font-semibold mb-4">เลือกอุปกรณ์</h2>
-      <div class="flex space-x-6 overflow-x-auto">
-        <div
-          v-for="item in devices"
-          :key="item.name"
-          class="flex flex-col items-center bg-gray-50 p-4 rounded-lg shadow-md w-36"
-        >
-          <img
-            :src="item.image"
-            :alt="item.name"
-            class="w-20 h-20 object-contain mb-2"
-          />
-          <p class="font-semibold">{{ item.name }}</p>
-          <p class="text-sm text-gray-600">เหลือ: {{ item.count }}</p>
-          <button
-            @click="addDevice(item)"
-            class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full disabled:opacity-50"
-            :disabled="item.count <= 0"
+    <div class="container mx-auto px-6 py-8">
+      <!-- Equipment Selection Section -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 mb-8 border border-white/20">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800">เลือกอุปกรณ์</h2>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div
+            v-for="item in devices"
+            :key="item.name"
+            class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
           >
-            ➕
-          </button>
+            <div class="flex flex-col items-center text-center">
+              <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-1 group-hover:scale-110 transition-transform duration-300">
+                <img
+                  :src="getEquipmentImage(item.name)"
+                  :alt="item.name"
+                  class="w-16 h-16 object-contain"
+                />
+              </div>
+              <h3 class="font-semibold text-gray-800 mb-2 text-sm">{{ item.name }}</h3>
+              <div class="flex items-center space-x-2 mb-3">
+                <div class="w-2 h-2 rounded-full" :class="item.quantity > 0 ? 'bg-green-500' : 'bg-red-500'"></div>
+                <span class="text-sm font-medium" :class="item.quantity > 0 ? 'text-green-600' : 'text-red-600'">
+                  เหลือ: {{ item.quantity }}
+                </span>
+              </div>
+              <button
+                @click="addDevice(item)"
+                class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                :disabled="item.quantity <= 0"
+              >
+                <span class="flex items-center justify-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                  เลือก
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- ฟอร์มเพิ่มรายการยืม -->
-    <div class="bg-white shadow-lg rounded-lg p-4 mb-6">
-      <h2 class="text-lg font-semibold mb-4">เพิ่มรายการยืมอุปกรณ์</h2>
+      <!-- Borrowing Form Section -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 mb-8 border border-white/20">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800">เพิ่มรายการยืมอุปกรณ์</h2>
+        </div>
 
-      <!-- ✅ แสดงอุปกรณ์ที่เลือก -->
-      <div v-if="Object.keys(selectedDevices).length" class="mb-4">
-        <h3 class="font-semibold mb-2">อุปกรณ์ที่เลือก:</h3>
-        <div
-          v-for="(qty, name) in selectedDevices"
-          :key="name"
-          class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded mb-2"
-        >
-          <span>{{ name }} {{ qty }} ชิ้น</span>
-          <div class="space-x-2">
-            <button
-              @click="decreaseDevice(name)"
-              class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
+        <!-- Selected Equipment Display -->
+        <div v-if="Object.keys(selectedDevices).length" class="mb-6">
+          <h3 class="font-semibold mb-4 text-gray-700 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            อุปกรณ์ที่เลือก:
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              v-for="(qty, name) in selectedDevices"
+              :key="name"
+              class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-200 flex items-center justify-between"
             >
-              ➖
-            </button>
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                  <span class="text-white text-sm font-bold">{{ qty }}</span>
+                </div>
+                <span class="font-medium text-gray-700">{{ name }}</span>
+              </div>
+              <div class="flex space-x-2">
+                <button
+                  @click="decreaseDevice(name)"
+                  class="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center transition-colors duration-200"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                  </svg>
+                </button>
+                <button
+                  @click="increaseDevice(name)"
+                  class="w-8 h-8 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center justify-center transition-colors duration-200"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Form -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">สรุปอุปกรณ์ที่ยืม</label>
+            <input
+              v-model="title"
+              placeholder="สรุปอุปกรณ์ที่ยืม"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50"
+              readonly
+            />
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">ชื่อผู้ยืม</label>
+            <input
+              v-model="borrowerName"
+              @keyup.enter="createNote"
+              placeholder="ชื่อผู้ยืม"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            />
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">&nbsp;</label>
             <button
-              @click="increaseDevice(name)"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded"
+              @click="createNote"
+              class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
             >
-              ➕
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              บันทึกการยืม
             </button>
           </div>
         </div>
       </div>
 
-      <!-- ช่องกรอกข้อมูล -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Search Section -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
+        <div class="flex items-center mb-4">
+          <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800">ค้นหา</h2>
+        </div>
         <input
-          v-model="title"
-          placeholder="สรุปอุปกรณ์ที่ยืม"
-          class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          readonly
+          v-model="searchQuery"
+          placeholder="ค้นหาชื่อผู้ยืม - อุปกรณ์......."
+          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white"
         />
-        <input
-          v-model="borrowerName"
-          @keyup.enter="createNote"
-          placeholder="ชื่อผู้ยืม"
-          class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      </div>
+
+      <!-- Borrowed Equipment List -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800">รายการอุปกรณ์ที่ถูกยืม</h2>
+        </div>
+        
+        <div class="space-y-4">
+          <NoteCard
+            v-for="note in filteredNotes"
+            :key="note._id"
+            :note="note"
+            @delete="deleteNote"
+            @update="updateNote"
+          />
+        </div>
+      </div>
+
+      <!-- Logout Section -->
+      <div class="text-center mt-12">
         <button
-          @click="createNote"
-          class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
+          @click="handleLogout"
+          class="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
-          บันทึกการยืม
+          <span class="flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            ออกจากระบบ
+          </span>
         </button>
       </div>
-    </div>
-
-    <!-- ช่องค้นหา -->
-    <div class="mb-6">
-      <input
-        v-model="searchQuery"
-        placeholder="ค้นหาชื่อผู้ยืม - อุปกรณ์......."
-        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-
-    <!-- รายการอุปกรณ์ที่ถูกยืม -->
-    <div class="grid grid-cols-1 gap-4">
-      <NoteCard
-        v-for="note in filteredNotes"
-        :key="note.id"
-        :note="note"
-        @delete="deleteNote"
-      />
-    </div>
-
-    <!-- ปุ่ม Logout -->
-    <div class="mt-8 text-center">
-      <button
-        @click="handleLogout"
-        class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg shadow"
-      >
-        ออกจากระบบ
-      </button>
     </div>
   </div>
 </template>
@@ -123,31 +205,61 @@ import { useRouter } from 'vue-router'
 import NoteCard from '../components/NoteCard.vue'
 
 const title = ref('')
-const borrowerName = ref('') // ชื่อผู้ยืม
+const borrowerName = ref('')
 const notes = ref([])
 const searchQuery = ref('')
 const router = useRouter()
 
 // ------------------ อุปกรณ์ -------------------
-const devices = ref([
-  { name: 'ลูกฟุตบอล', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIHnIGvMnRN2YZkxnwRt1vsKiH_wmqcQaBTQ&s', count: 5 },
-  { name: 'ลูกบาส', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlu6EJW1WF1V8z2_fv8CsD1Dqz7qihsvB-ig&s', count: 3 },
-  { name: 'ลูกตะกร้อ', image: 'https://image.makewebcdn.com/makeweb/m_1920x0/RkWxkNYkh/Takraw/Takraw_Green.png', count: 7 },
-  { name: 'ลูกแบดมินตัน', image: 'https://png.pngtree.com/png-clipart/20240826/original/pngtree-sport-ball-badminton-png-image_15854112.png', count: 7 },
-  { name: 'ลูกเบสบอล', image: 'https://png.pngtree.com/png-clipart/20240808/original/pngtree-ball-baseball-3d-png-image_15723366.png', count: 7 },
-  { name: 'ลูกกอล์ฟ', image: 'https://png.pngtree.com/png-vector/20250607/ourmid/pngtree-closeup-of-a-white-golf-ball-on-transparent-background-png-image_16484066.png', count: 7 },
-  { name: 'ลูกเทนนิส', image: 'https://png.pngtree.com/png-clipart/20250222/original/pngtree-realistic-3d-tennis-ball-with-textured-surface-for-sports-graphics-and-png-image_20494646.png', count: 7 },
-  { name: 'ลูกปิงปอง', image: 'https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-ping-pong-ball---orange-isolated-png-image_10273794.png', count: 7 },
-  { name: 'ลูกฟุตซอล', image: 'https://img.th.my-best.com/product_images/00bd316486d65b5fae84e1d8e8f02422.png?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=25fb172e36def8344191986708b8b47b', count: 7 },
-])
+const devices = ref([])
 
 // เก็บจำนวนที่เลือก
 const selectedDevices = ref({})
 
+// Fetch equipment data from backend
+const fetchEquipment = async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/api/equipment/public')
+    devices.value = response.data
+  } catch (error) {
+    console.error('Failed to fetch equipment:', error)
+    // Fallback to default devices if API fails
+    devices.value = [
+      { name: 'ลูกฟุตบอล', quantity: 10 },
+      { name: 'ลูกบาส', quantity: 10 },
+      { name: 'ลูกตะกร้อ', quantity: 10 },
+      { name: 'ลูกแบดมินตัน', quantity: 10 },
+      { name: 'ลูกเบสบอล', quantity: 10 },
+      { name: 'ลูกกอล์ฟ', quantity: 10 },
+      { name: 'ลูกเทนนิส', quantity: 10 },
+      { name: 'ลูกปิงปอง', quantity: 10 },
+      { name: 'ลูกฟุตซอล', quantity: 10 },
+      { name: 'ลูกวอลเล่บอล', quantity: 10 },
+    ]
+  }
+}
+
+// Get equipment image based on name
+const getEquipmentImage = (name) => {
+  const imageMap = {
+    'ลูกฟุตบอล': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIHnIGvMnRN2YZkxnwRt1vsKiH_wmqcQaBTQ&s',
+    'ลูกบาส': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlu6EJW1WF1V8z2_fv8CsD1Dqz7qihsvB-ig&s',
+    'ลูกตะกร้อ': 'https://image.makewebcdn.com/makeweb/m_1920x0/RkWxkNYkh/Takraw/Takraw_Green.png',
+    'ลูกแบดมินตัน': 'https://png.pngtree.com/png-clipart/20240826/original/pngtree-sport-ball-badminton-png-image_15854112.png',
+    'ลูกเบสบอล': 'https://png.pngtree.com/png-clipart/20240808/original/pngtree-ball-baseball-3d-png-image_15723366.png',
+    'ลูกกอล์ฟ': 'https://png.pngtree.com/png-vector/20250607/ourmid/pngtree-closeup-of-a-white-golf-ball-on-transparent-background-png-image_16484066.png',
+    'ลูกเทนนิส': 'https://png.pngtree.com/png-clipart/20250222/original/pngtree-realistic-3d-tennis-ball-with-textured-surface-for-sports-graphics-and-png-image_20494646.png',
+    'ลูกปิงปอง': 'https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-ping-pong-ball---orange-isolated-png-image_10273794.png',
+    'ลูกฟุตซอล': 'https://img.th.my-best.com/product_images/00bd316486d65b5fae84e1d8e8f02422.png?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=25fb172e36def8344191986708b8b47b',
+    'ลูกวอลเล่บอล': 'https://img.th.my-best.com/product_images/bb7d665360da64af5541c7f07af9da2b.png?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=be46c00e232bb00365a4d27d12054418',
+  }
+  return imageMap[name] || 'https://via.placeholder.com/80x80?text=Equipment'
+}
+
 // เพิ่มอุปกรณ์ที่เลือก
 const addDevice = (item) => {
-  if (item.count > 0) {
-    item.count--
+  if (item.quantity > 0) {
+    item.quantity--
     selectedDevices.value[item.name] = (selectedDevices.value[item.name] || 0) + 1
     updateTitle()
   }
@@ -156,8 +268,8 @@ const addDevice = (item) => {
 // เพิ่มในฟอร์ม
 const increaseDevice = (name) => {
   const device = devices.value.find(d => d.name === name)
-  if (device && device.count > 0) {
-    device.count--
+  if (device && device.quantity > 0) {
+    device.quantity--
     selectedDevices.value[name]++
     updateTitle()
   }
@@ -167,7 +279,7 @@ const increaseDevice = (name) => {
 const decreaseDevice = (name) => {
   const device = devices.value.find(d => d.name === name)
   if (device && selectedDevices.value[name] > 0) {
-    device.count++
+    device.quantity++
     selectedDevices.value[name]--
     if (selectedDevices.value[name] === 0) {
       delete selectedDevices.value[name]
@@ -176,18 +288,20 @@ const decreaseDevice = (name) => {
   }
 }
 
-// อัปเดตข้อความสรุป
+// ✅ อัปเดตข้อความสรุป
 const updateTitle = () => {
   const summary = Object.entries(selectedDevices.value)
     .map(([name, qty]) => `${name} ${qty} ชิ้น`)
     .join(', ')
-  title.value = `ยืม : ${summary}\nชื่อ : ${borrowerName.value}`
+  title.value = summary
+    ? `ยืม : ${summary} \nชื่อ : ${borrowerName.value || '...'}`
+    : ''
 }
 
-// ✅ อัปเดต title ทุกครั้งที่กรอกชื่อ
-watch(borrowerName, () => {
+// ✅ อัปเดต title ทุกครั้งที่กรอกชื่อหรือเปลี่ยนจำนวน
+watch([selectedDevices, borrowerName], () => {
   updateTitle()
-})
+}, { deep: true })
 
 // ------------------------------------------------
 
@@ -230,7 +344,9 @@ const createNote = async () => {
     title.value = ''
     borrowerName.value = ''
     selectedDevices.value = {}
-    devices.value.forEach(d => d.count = d.count) // (ถ้า backend มี stock จริงให้ fetch ใหม่แทน)
+    
+    // Refresh equipment data from backend to get updated quantities
+    await fetchEquipment()
     fetchNotes()
   } catch (e) {
     console.error('Create note failed:', e)
@@ -241,10 +357,32 @@ const deleteNote = async (id) => {
   const token = localStorage.getItem('token')
   if (!token) return router.push('/login')
 
-  await axios.delete(`http://localhost:5000/api/notes/${id}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  fetchNotes()
+  try {
+    await axios.delete(`http://localhost:5000/api/notes/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    
+    // Refresh both notes and equipment data
+    await fetchEquipment()
+    fetchNotes()
+  } catch (error) {
+    console.error('Delete note failed:', error)
+  }
+}
+
+const updateNote = async (id, updatedNote) => {
+  const token = localStorage.getItem('token')
+  if (!token) return router.push('/login')
+
+  try {
+    await axios.put(`http://localhost:5000/api/notes/${id}`, updatedNote, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    fetchNotes() // Refresh notes to get updated status
+    // No need to refresh equipment here, as status change doesn't affect quantity
+  } catch (error) {
+    console.error('Update note failed:', error)
+  }
 }
 
 const handleLogout = () => {
@@ -254,7 +392,6 @@ const handleLogout = () => {
   }
 }
 
-
 const filteredNotes = computed(() =>
   notes.value.filter(
     (note) =>
@@ -263,5 +400,8 @@ const filteredNotes = computed(() =>
   )
 )
 
-onMounted(fetchNotes)
+onMounted(async () => {
+  await fetchEquipment()
+  fetchNotes()
+})
 </script>
