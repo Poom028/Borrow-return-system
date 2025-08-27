@@ -1,13 +1,10 @@
-<<<<<<< HEAD
-# ex1-daily-notes
-=======
-# Nuxt Minimal Starter
+# Borrow-return-system
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This project is a Nuxt-based app for managing equipment borrowing and returning.
 
 ## Setup
 
-Make sure to install dependencies:
+Install dependencies:
 
 ```bash
 # npm
@@ -25,7 +22,7 @@ bun install
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the dev server on http://localhost:3000
 
 ```bash
 # npm
@@ -59,7 +56,7 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
+Preview the production build locally:
 
 ```bash
 # npm
@@ -75,5 +72,4 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
->>>>>>> 1f118a4e14efc7b8221f817012085e38ddfbaf27
+Refer to the official Nuxt docs for more: https://nuxt.com/docs/getting-started/introduction

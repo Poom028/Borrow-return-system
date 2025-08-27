@@ -399,7 +399,6 @@ const filteredNotes = computed(() =>
       note.content.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 )
-
 onMounted(async () => {
   await fetchEquipment()
   fetchNotes()
