@@ -129,7 +129,7 @@ const searchQuery = ref('')
 const router = useRouter()
 
 // ------------------ อุปกรณ์ -------------------
-const devices = ref([
+const defaultDevices = [
   { name: 'ลูกฟุตบอล', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIHnIGvMnRN2YZkxnwRt1vsKiH_wmqcQaBTQ&s', count: 5 },
   { name: 'ลูกบาส', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlu6EJW1WF1V8z2_fv8CsD1Dqz7qihsvB-ig&s', count: 3 },
   { name: 'ลูกตะกร้อ', image: 'https://image.makewebcdn.com/makeweb/m_1920x0/RkWxkNYkh/Takraw/Takraw_Green.png', count: 7 },
@@ -139,10 +139,24 @@ const devices = ref([
   { name: 'ลูกเทนนิส', image: 'https://png.pngtree.com/png-clipart/20250222/original/pngtree-realistic-3d-tennis-ball-with-textured-surface-for-sports-graphics-and-png-image_20494646.png', count: 7 },
   { name: 'ลูกปิงปอง', image: 'https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-ping-pong-ball---orange-isolated-png-image_10273794.png', count: 7 },
   { name: 'ลูกฟุตซอล', image: 'https://img.th.my-best.com/product_images/00bd316486d65b5fae84e1d8e8f02422.png?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=25fb172e36def8344191986708b8b47b', count: 7 },
-])
+]
+
+const devices = ref([])
+
+// โหลดจาก localStorage ถ้ามี
+onMounted(() => {
+  const saved = localStorage.getItem('devices')
+  devices.value = saved ? JSON.parse(saved) : defaultDevices
+  fetchNotes()
+})
 
 // เก็บจำนวนที่เลือก
 const selectedDevices = ref({})
+
+// ✅ ฟังก์ชันบันทึกค่า devices ลง localStorage
+const saveDevices = () => {
+  localStorage.setItem('devices', JSON.stringify(devices.value))
+}
 
 // เพิ่มอุปกรณ์ที่เลือก
 const addDevice = (item) => {
@@ -150,6 +164,7 @@ const addDevice = (item) => {
     item.count--
     selectedDevices.value[item.name] = (selectedDevices.value[item.name] || 0) + 1
     updateTitle()
+    saveDevices()
   }
 }
 
@@ -160,6 +175,7 @@ const increaseDevice = (name) => {
     device.count--
     selectedDevices.value[name]++
     updateTitle()
+    saveDevices()
   }
 }
 
@@ -173,6 +189,7 @@ const decreaseDevice = (name) => {
       delete selectedDevices.value[name]
     }
     updateTitle()
+    saveDevices()
   }
 }
 
@@ -230,7 +247,7 @@ const createNote = async () => {
     title.value = ''
     borrowerName.value = ''
     selectedDevices.value = {}
-    devices.value.forEach(d => d.count = d.count) // (ถ้า backend มี stock จริงให้ fetch ใหม่แทน)
+    saveDevices() // ✅ เซฟค่า stock ล่าสุด
     fetchNotes()
   } catch (e) {
     console.error('Create note failed:', e)
@@ -254,7 +271,6 @@ const handleLogout = () => {
   }
 }
 
-
 const filteredNotes = computed(() =>
   notes.value.filter(
     (note) =>
@@ -262,6 +278,4 @@ const filteredNotes = computed(() =>
       note.content.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 )
-
-onMounted(fetchNotes)
 </script>
