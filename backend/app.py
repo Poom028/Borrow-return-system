@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -7,25 +6,29 @@ from config import Config
 
 from routes.auth import auth
 from routes.notes import notes
-from routes.equipment import equipment_bp   # ✅ เพิ่ม import
+from routes.equipment import equipment_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-CORS(app)
-JWTManager(app)
+# Init Extensions
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+jwt = JWTManager(app)
 
-# เชื่อมต่อ MongoDB
-connect(
-    db=app.config["MONGODB_SETTINGS"]["db"],
-    host=app.config["MONGODB_SETTINGS"]["host"],
-    port=app.config["MONGODB_SETTINGS"]["port"]
-)
+# MongoDB connect (รองรับทั้ง local และ Atlas)
+if "uri" in app.config["MONGODB_SETTINGS"]:
+    connect(host=app.config["MONGODB_SETTINGS"]["uri"])
+else:
+    connect(
+        db=app.config["MONGODB_SETTINGS"]["db"],
+        host=app.config["MONGODB_SETTINGS"]["host"],
+        port=app.config["MONGODB_SETTINGS"]["port"]
+    )
 
 # Register Blueprints
 app.register_blueprint(auth, url_prefix="/api")
 app.register_blueprint(notes, url_prefix="/api")
-app.register_blueprint(equipment_bp, url_prefix="/api")  # ✅ เพิ่มบรรทัดนี้
+app.register_blueprint(equipment_bp, url_prefix="/api")
 
 if __name__ == "__main__":
     app.run(debug=True)

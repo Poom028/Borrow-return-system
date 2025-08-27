@@ -263,6 +263,5 @@ const filteredNotes = computed(() =>
   )
 )
 
-
 onMounted(fetchNotes)
 </script>
