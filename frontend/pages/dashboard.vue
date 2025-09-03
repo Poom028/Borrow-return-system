@@ -370,6 +370,7 @@ const deleteNote = async (id) => {
   }
 }
 
+
 const updateNote = async (id, updatedNote) => {
   const token = localStorage.getItem('token')
   if (!token) return router.push('/login')
