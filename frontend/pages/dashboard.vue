@@ -27,6 +27,8 @@
                   :src="getEquipmentImage(item.name)"
                   :alt="item.name"
                   class="w-16 h-16 object-contain"
+                  @error="handleImageError"
+                  @load="handleImageLoad"
                 />
               </div>
               <h3 class="font-semibold text-gray-800 mb-2 text-sm">{{ item.name }}</h3>
@@ -253,7 +255,19 @@ const getEquipmentImage = (name) => {
     'ลูกฟุตซอล': 'https://img.th.my-best.com/product_images/00bd316486d65b5fae84e1d8e8f02422.png?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=25fb172e36def8344191986708b8b47b',
     'ลูกวอลเล่บอล': 'https://img.th.my-best.com/product_images/bb7d665360da64af5541c7f07af9da2b.png?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=be46c00e232bb00365a4d27d12054418',
   }
-  return imageMap[name] || 'https://via.placeholder.com/80x80?text=Equipment'
+  return imageMap[name] || 'https://via.placeholder.com/80x80/4F46E5/FFFFFF?text=Equipment'
+}
+
+// Handle image loading errors
+const handleImageError = (event) => {
+  console.warn('Image failed to load:', event.target.src)
+  // Set fallback image
+  event.target.src = 'https://via.placeholder.com/80x80/4F46E5/FFFFFF?text=Equipment'
+}
+
+// Handle successful image loading
+const handleImageLoad = (event) => {
+  console.log('Image loaded successfully:', event.target.src)
 }
 
 // เพิ่มอุปกรณ์ที่เลือก
