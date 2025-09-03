@@ -49,7 +49,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd ~/borrow-return-system
-          docker pull pxlm1z/borrow-backend:latest
-          docker pull pxlm1z/borrow-backend:latest
+          docker pull pxlm1z/borrow-frontend:latest
+          docker pull pxlm1z/borrow-frontend:latest
           docker compose down
           docker compose up -d
