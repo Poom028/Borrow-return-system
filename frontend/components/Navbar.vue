@@ -4,6 +4,7 @@
     <div class="space-x-4">
       <NuxtLink to="/login">เข้าสู่ระบบ</NuxtLink>
       <NuxtLink to="/dashboard">ยืมอุปกรณ์</NuxtLink>
+      <NuxtLink to="/members">รายชื่อสมาชิก</NuxtLink>
     </div>
   </nav>
 </template>
