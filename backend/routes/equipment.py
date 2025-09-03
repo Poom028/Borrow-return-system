@@ -63,8 +63,8 @@ def borrow_equipment():
     equipment.quantity -= amount
     equipment.save()
 
-    # บันทึกการยืม
-    user = User.objects(username=get_jwt_identity()).first()
+    # บันทึกการยืม (ใช้ user id จาก JWT)
+    user = User.objects(id=get_jwt_identity()).first()
     borrow_record = BorrowRecord(user=user, equipment=equipment, amount=amount)
     borrow_record.save()
 
