@@ -97,6 +97,7 @@ def update_note(note_id):
             note.save()
             print(f"Updated note {note_id} status: {old_status} -> {note.status}")
             
+            
             # If status is changed to "Returned", restore equipment quantities
             if old_status == "Not Returned" and data["status"] == "Returned":
                 equipment_info = parse_equipment_from_title(note.title)
