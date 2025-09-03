@@ -5,6 +5,7 @@ from models import Equipment, BorrowRecord, User
 
 equipment_bp = Blueprint("equipment", __name__)
 
+
 # ✅ ดูรายการอุปกรณ์
 @equipment_bp.route("/equipment", methods=["GET"])
 @jwt_required()
