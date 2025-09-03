@@ -413,7 +413,7 @@ const filteredNotes = computed(() =>
       note.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       note.content.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
-)
+)//gddfg
 onMounted(async () => {
   await fetchEquipment()
   fetchNotes()
