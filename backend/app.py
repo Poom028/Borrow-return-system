@@ -26,7 +26,7 @@ else:
     )
 
 # Register Blueprints
-app.register_blueprint(auth, url_prefix="/api")
+app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(notes, url_prefix="/api")
 app.register_blueprint(equipment_bp, url_prefix="/api")
 
