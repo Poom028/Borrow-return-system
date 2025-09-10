@@ -16,14 +16,14 @@ auth = Blueprint("auth", __name__)
 def register():
     data = request.get_json()
     if User.objects(username=data["username"]):
-        return jsonify({"msg": "Username already exists"}), 400
+        return jsonify({"msg": "Username already exists", "message": "Username already exists"}), 400
 
     hashed_pw = generate_password_hash(data["password"])
     user = User(username=data["username"], password=hashed_pw)
     user.save()
 
     # Return HTTP 200 to align with existing tests
-    return jsonify({"msg": "User registered successfully"}), 200
+    return jsonify({"msg": "User registered successfully", "message": "User registered successfully"}), 200
 
 # --------------------------
 # Login

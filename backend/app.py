@@ -5,6 +5,8 @@ from mongoengine import connect
 from config import Config
 
 from routes.auth import auth
+from routes.auth import register as auth_register
+from routes.auth import login as auth_login
 from routes.notes import notes
 from routes.equipment import equipment_bp
 
@@ -29,6 +31,14 @@ else:
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(notes, url_prefix="/api")
 app.register_blueprint(equipment_bp, url_prefix="/api")
+
+@app.route("/api/register", methods=["POST"])
+def api_register():
+    return auth_register()
+
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    return auth_login()
 
 if __name__ == "__main__":
     app.run(debug=True)
